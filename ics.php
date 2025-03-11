@@ -107,6 +107,33 @@ if(!defined('CDAV_TASK_SYNC'))
 		define('CDAV_TASK_SYNC', '0');
 }
 
+// define CDAV_CARD_MAP_PREFIX if not
+if(!defined('CDAV_CARD_MAP_PREFIX'))
+{
+	if(isset($conf->global->CDAV_CARD_MAP_PREFIX))
+		define('CDAV_CARD_MAP_PREFIX', $conf->global->CDAV_CARD_MAP_PREFIX);
+	else
+		define('CDAV_CARD_MAP_PREFIX', '0');
+}
+
+// define CDAV_CARD_MAP_SUFFIX if not
+if(!defined('CDAV_CARD_MAP_SUFFIX'))
+{
+	if(isset($conf->global->CDAV_CARD_MAP_SUFFIX))
+		define('CDAV_CARD_MAP_SUFFIX', $conf->global->CDAV_CARD_MAP_SUFFIX);
+	else
+		define('CDAV_CARD_MAP_SUFFIX', '0');
+}
+
+// define CDAV_CARD_MAP_FN if not
+if(!defined('CDAV_CARD_MAP_FN'))
+{
+	if(isset($conf->global->CDAV_CARD_MAP_FN))
+		define('CDAV_CARD_MAP_FN', $conf->global->CDAV_CARD_MAP_FN);
+	else
+		define('CDAV_CARD_MAP_FN', '0');
+}
+
 // define CDAV_THIRD_SYNC if not
 if(!defined('CDAV_THIRD_SYNC'))
 {

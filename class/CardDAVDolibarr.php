@@ -330,15 +330,48 @@ class Dolibarr extends AbstractBackend implements SyncSupport {
 		$carddata.="VERSION:3.0\n";
 		$carddata.="PRODID:-//Dolibarr CDav//FR\n";
 		$carddata.="UID:".$obj->rowid.'-ct-'.CDAV_URI_KEY."\n";
-		if(!empty($obj->soc_nom) && getDolGlobalInt('CDAV_CONCAT_SOCNAME_FOR_PHONE'))
+		
+		$prefix="";
+		if (CDAV_CARD_MAP_PREFIX == 1 && empty(getDolGlobalInt('CDAV_CONCAT_SOCNAME_FOR_PHONE')))
+			$prefix=$obj->civility;
+		elseif ((CDAV_CARD_MAP_PREFIX == 2 || getDolGlobalInt('CDAV_CONCAT_SOCNAME_FOR_PHONE')) && !empty($obj->soc_nom))
+			$prefix="(".$obj->soc_nom.")";
+		elseif (CDAV_CARD_MAP_PREFIX == 3 && (($obj->soc_client && !empty($obj->soc_code_client)) || ($obj->soc_fournisseur && !empty($obj->soc_code_fournisseur))))
 		{
-			$carddata.="N;CHARSET=UTF-8:".str_replace(';','\;',$obj->lastname).";".str_replace(';','\;',$obj->firstname).";;".str_replace(';','\;',"(".$obj->soc_nom.")")."\n";
-			$carddata.="FN;CHARSET=UTF-8:".str_replace(';','\;',"(".$obj->soc_nom.") ".$obj->lastname." ".$obj->firstname)."\n";
+			if ($obj->soc_client)
+				$prefix="(".$obj->soc_code_client.")";
+			else
+				$prefix="(".$obj->soc_code_fournisseur.")";
 		}
-		else
+
+		$suffix="";
+		if (CDAV_CARD_MAP_SUFFIX == 1 && !empty($obj->soc_nom))
+			$suffix="(".$obj->soc_nom.")";
+		elseif (CDAV_CARD_MAP_SUFFIX == 2 && (($obj->soc_client && !empty($obj->soc_code_client)) || ($obj->soc_fournisseur && !empty($obj->soc_code_fournisseur))))
 		{
-			$carddata.="N;CHARSET=UTF-8:".str_replace(';','\;',$obj->lastname).";".str_replace(';','\;',$obj->firstname).";;".str_replace(';','\;',$obj->civility)."\n";
-			$carddata.="FN;CHARSET=UTF-8:".str_replace(';','\;',$obj->lastname." ".$obj->firstname)."\n";
+			if ($obj->soc_client)
+				$suffix="[".$obj->soc_code_client."]";
+			else
+				$suffix="[".$obj->soc_code_fournisseur."]";
+		}
+
+		// Build the vCard N property (Family;Given;Additional;Prefixes;Suffixes)
+		$carddata.="N;CHARSET=UTF-8:".str_replace(';', '\;', $obj->lastname).";".str_replace(';', '\;', $obj->firstname).";;". str_replace(';', '\;', $prefix).";".str_replace(';', '\;', $suffix)."\n";
+
+		//Build the vCard FN property (formatted name)
+		if (CDAV_CARD_MAP_FN > 0)
+		{
+			if (CDAV_CARD_MAP_FN == 1)
+				$formattedName=$obj->lastname." ".$obj->firstname;
+			elseif (CDAV_CARD_MAP_FN == 2)
+				$formattedName=$obj->firstname." ".$obj->lastname;
+			
+			if (!empty($prefix))
+				$formattedName=$prefix." ".$formattedName;
+			if (!empty($suffix))
+				$formattedName.=" ".$suffix;
+			
+			$carddata.="FN;CHARSET=UTF-8:".str_replace(';', '\;', $formattedName)."\n";
 		}
 
 		if(!empty($obj->soc_nom) && !empty($obj->soc_name_alias))

@@ -65,6 +65,25 @@ $tasksync_method=array(
 	'3' => $langs->trans("Sync as calendar events and todo tasks"),
 );
 
+$card_map_prefix_field=array(
+	'0' => $langs->trans("Empty"),
+	'1' => $langs->trans("Civility"),
+	'2' => $langs->trans("Thirdparty name"),
+	'3' => $langs->trans("Thirdparty code"),
+);
+
+$card_map_suffix_field=array(
+	'0' => $langs->trans("Empty"),
+	'1' => $langs->trans("Thirdparty name"),
+	'2' => $langs->trans("Thirdparty code"),
+);
+
+$card_map_fn_field=array(
+	'0' => $langs->trans("Empty"),
+	'1' => $langs->trans("Last Name and First Name"),
+	'2' => $langs->trans("First Name and Last Name"),
+);
+
 $thirdsync_method=array(
 	'0' => $langs->trans("Not synchonized"),
 	'1' => $langs->trans("Only thirdparties without contact"),
@@ -90,6 +109,18 @@ if ($action == 'setvalue') {
 	dolibarr_set_const(
 									$db, "CDAV_CONTACT_TAG",
 									GETPOST('CDAV_CONTACT_TAG', 'alphanohtml'), 'chaine', 0, '', $conf->entity
+	);
+	dolibarr_set_const(
+									$db, "CDAV_CARD_MAP_PREFIX",
+									GETPOST('CDAV_CARD_MAP_PREFIX', 'alphanohtml'), 'chaine', 0, '', $conf->entity
+	);
+	dolibarr_set_const(
+									$db, "CDAV_CARD_MAP_SUFFIX",
+									GETPOST('CDAV_CARD_MAP_SUFFIX', 'alphanohtml'), 'chaine', 0, '', $conf->entity
+	);
+	dolibarr_set_const(
+									$db, "CDAV_CARD_MAP_FN",
+									GETPOST('CDAV_CARD_MAP_FN', 'alphanohtml'), 'chaine', 0, '', $conf->entity
 	);
 	dolibarr_set_const(
 									$db, "CDAV_THIRD_SYNC",
@@ -184,6 +215,9 @@ print_fiche_titre($page_name, $linkback, 'title_setup');
 
 $CDAV_URI_KEY=substr($conf->global->CDAV_URI_KEY,0,8);
 $CDAV_CONTACT_TAG=$conf->global->CDAV_CONTACT_TAG;
+$CDAV_CARD_MAP_PREFIX=$conf->global->CDAV_CARD_MAP_PREFIX;
+$CDAV_CARD_MAP_SUFFIX=$conf->global->CDAV_CARD_MAP_SUFFIX;
+$CDAV_CARD_MAP_FN=$conf->global->CDAV_CARD_MAP_FN;
 $CDAV_THIRD_SYNC=$conf->global->CDAV_THIRD_SYNC;
 $CDAV_MEMBER_SYNC=$conf->global->CDAV_MEMBER_SYNC;
 $CDAV_SYNC_PAST=$conf->global->CDAV_SYNC_PAST;
@@ -228,6 +262,24 @@ print '<tr >';
 print '<td  align=left><strong>'.$langs->trans("Contacts filter").'</strong><br/>'.$langs->trans("Contact tag to restrict contacts to sync, leave blank to sync all").'</td>';
 print '<td  align=left>';
 print $form->select_all_categories("contact", $CDAV_CONTACT_TAG, 'CDAV_CONTACT_TAG', 0);
+print '</td></tr>'."\n";
+
+print '<tr >';
+print '<td  align=left><strong>'.$langs->trans("Contact prefix mapping").'</strong><br/>'.$langs->trans("Select the field that will be used as a prefix").'</td>';
+print '<td  align=left>';
+print $form->selectarray('CDAV_CARD_MAP_PREFIX', $card_map_prefix_field, $CDAV_CARD_MAP_PREFIX);
+print '</td></tr>'."\n";
+
+print '<tr >';
+print '<td  align=left><strong>'.$langs->trans("Contact suffix mapping").'</strong><br/>'.$langs->trans("Select the field that will be used as a suffix").'</td>';
+print '<td  align=left>';
+print $form->selectarray('CDAV_CARD_MAP_SUFFIX', $card_map_suffix_field, $CDAV_CARD_MAP_SUFFIX);
+print '</td></tr>'."\n";
+
+print '<tr >';
+print '<td  align=left><strong>'.$langs->trans("Contact Formatted Name").'</strong><br/>'.$langs->trans("Select the format of the contact formatted name").'</td>';
+print '<td  align=left>';
+print $form->selectarray('CDAV_CARD_MAP_FN', $card_map_fn_field, $CDAV_CARD_MAP_FN);
 print '</td></tr>'."\n";
 
 print '<tr >';

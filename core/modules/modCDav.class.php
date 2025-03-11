@@ -134,6 +134,9 @@ class modCDav extends DolibarrModules
 			18 => array('CDAV_TASK_HOUR_END', 'chaine', '', 'Ending of a working day',0,'current',0),
 			19 => array('CDAV_QRCODE_DAVX5_ENABLED', 'chaine', '0', 'Activate DavX5 auto URL',0,'current',0),
 			20 => array('CDAV_MEMBER_SYNC', 'chaine', '0', 'Sync members',0,'current',0),
+			21 => array('CDAV_CARD_MAP_PREFIX', 'chaine', '1', 'Specify the field to use as a prefix for contact',0,'current',0),
+			22 => array('CDAV_CARD_MAP_SUFFIX', 'chaine', '0', 'Specify the field to use as a suffix for contact',0,'current',0),
+			23 => array('CDAV_CARD_MAP_FN', 'chaine', '1', 'Specify the format of the formatted name field for contact',0,'current',0)
 		);
 
 		// Array to add new pages in new tabs
